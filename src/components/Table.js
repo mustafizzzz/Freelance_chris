@@ -1,5 +1,6 @@
 import { useToast } from '@chakra-ui/react';
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import axios from 'axios';
 
 const Table = ({ formData }) => {
   const toast = useToast();
@@ -34,16 +35,30 @@ const Table = ({ formData }) => {
 
   const handleSubmit = () => {
     console.log("Absent Data:", absentData);
-    toast({
-      title: 'Attendance Submitted',
-      description: "success",
-      status: 'success',
-      duration: 5000,
-      isClosable: true,
-      position: 'top',
-    })
-    setTableData([])
 
+    axios.get(`http://localhost:5000/api/whatsapp/fire`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => {
+        if (res.status === 200) {
+          toast({
+            title: 'Attendance Submitted',
+            description: "success",
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+            position: 'top',
+          })
+          setTableData([])
+        } else {
+          alert(res.data)
+          console.log(res)
+        }
+
+      })
+      .catch(err => console.log(err));
   };
 
 
